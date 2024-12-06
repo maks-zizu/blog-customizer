@@ -35,7 +35,6 @@ const App = () => {
 				setIsSidebarOpen(false);
 			}
 		};
-
 		document.addEventListener('mousedown', handleOutsideClick);
 		return () => {
 			document.removeEventListener('mousedown', handleOutsideClick);
@@ -43,11 +42,7 @@ const App = () => {
 	}, [isSidebarOpen]);
 
 	const onToggleSidebar = () => {
-		// При открытии сайдбара синхронизируем formState с текущим состоянием статьи,
-		// чтобы при повторном открытии были актуальные значения
-		if (!isSidebarOpen) {
-			setFormState(articleState);
-		}
+		if (!isSidebarOpen) setFormState(articleState);
 		setIsSidebarOpen(!isSidebarOpen);
 	};
 
