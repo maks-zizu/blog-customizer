@@ -1,10 +1,11 @@
-import { FC } from 'react';
+import { FC, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { ArrowButton } from 'src/ui/arrow-button';
+import { Text } from 'src/ui/text';
 import { Button } from 'src/ui/button';
-import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
-import { Select } from 'src/ui/select/Select';
 import { Separator } from 'src/ui/separator';
+import { Select } from 'src/ui/select/Select';
+import { ArrowButton } from 'src/ui/arrow-button';
+import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
 import {
 	ArticleStateType,
 	fontFamilyOptions,
@@ -12,37 +13,50 @@ import {
 	backgroundColors,
 	contentWidthArr,
 	fontSizeOptions,
+	defaultArticleState,
 } from 'src/constants/articleProps';
-
 import styles from './ArticleParamsForm.module.scss';
-import { Text } from 'src/ui/text';
+import { useOutsideClick } from 'src/hooks/useOutsideClick';
 
 type ArticleParamsFormProps = {
-	isOpen: boolean;
-	onToggleOpen: () => void;
-	formState: ArticleStateType;
-	setFormState: (state: ArticleStateType) => void;
-	onApply: () => void;
-	onReset: () => void;
+	articleState: ArticleStateType;
+	setArticleState: (state: ArticleStateType) => void;
 };
 
 export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
-	isOpen,
-	onToggleOpen,
-	formState,
-	setFormState,
-	onApply,
-	onReset,
+	articleState,
+	setArticleState,
 }) => {
-	const handleFontFamilyChange = (
-		option: (typeof fontFamilyOptions)[number]
-	) => {
-		setFormState({ ...formState, fontFamilyOption: option });
+	const [formState, setFormState] = useState(articleState);
+	const [isOpen, setIsOpen] = useState(false);
+
+	const formRef = useRef<HTMLDivElement>(null);
+
+	useOutsideClick(formRef, () => {
+		if (isOpen) setIsOpen(false);
+	});
+
+	const onToggleSidebar = () => {
+		if (!isOpen) setFormState(articleState);
+		setIsOpen(!isOpen);
 	};
 
-	const handleFontColorChange = (option: (typeof fontColors)[number]) => {
-		setFormState({ ...formState, fontColor: option });
+	const onApply = () => {
+		setArticleState(formState);
+		setIsOpen(false);
 	};
+
+	const onReset = () => {
+		setFormState(defaultArticleState);
+		setArticleState(defaultArticleState);
+		setIsOpen(false);
+	};
+
+	const handleFontFamilyChange = (option: (typeof fontFamilyOptions)[number]) =>
+		setFormState({ ...formState, fontFamilyOption: option });
+
+	const handleFontColorChange = (option: (typeof fontColors)[number]) =>
+		setFormState({ ...formState, fontColor: option });
 
 	const handleBgColorChange = (option: (typeof backgroundColors)[number]) =>
 		setFormState({ ...formState, backgroundColor: option });
@@ -60,17 +74,15 @@ export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
 
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={onToggleOpen} />
+			<ArrowButton isOpen={isOpen} onClick={onToggleSidebar} />
 			<aside
-				className={clsx(styles.container, {
-					[styles.container_open]: isOpen,
-				})}
-				role='dialog'>
+				role='dialog'
+				ref={formRef}
+				className={clsx(styles.container, { [styles.container_open]: isOpen })}>
 				<form className={styles.form} onSubmit={handleSubmit}>
-					<Text as='h1' size={31} weight={800} uppercase dynamicLite>
+					<Text as='h1' size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
-
 					<div className={styles.field}>
 						<Select
 							title='Шрифт'
@@ -79,7 +91,6 @@ export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
 							onChange={handleFontFamilyChange}
 						/>
 					</div>
-
 					<div className={styles.field}>
 						<RadioGroup
 							name='fontSizeOption'
@@ -89,7 +100,6 @@ export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
 							onChange={handleFontSizeChange}
 						/>
 					</div>
-
 					<div className={styles.field}>
 						<Select
 							title='Цвет шрифта'
@@ -98,9 +108,7 @@ export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
 							onChange={handleFontColorChange}
 						/>
 					</div>
-
 					<Separator />
-
 					<div className={styles.field}>
 						<Select
 							title='Цвет фона'
@@ -109,7 +117,6 @@ export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
 							onChange={handleBgColorChange}
 						/>
 					</div>
-
 					<div className={styles.field}>
 						<Select
 							title='Ширина контента'
@@ -118,7 +125,6 @@ export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
 							onChange={handleContentWidthChange}
 						/>
 					</div>
-
 					<div className={styles.bottomContainer}>
 						<Button
 							title='Сбросить'
