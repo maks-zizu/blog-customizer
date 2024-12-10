@@ -83,48 +83,38 @@ export const ArticleParamsForm: FC<ArticleParamsFormProps> = ({
 					<Text as='h1' size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
-					<div className={styles.field}>
-						<Select
-							title='Шрифт'
-							options={fontFamilyOptions}
-							selected={formState.fontFamilyOption}
-							onChange={handleFontFamilyChange}
-						/>
-					</div>
-					<div className={styles.field}>
-						<RadioGroup
-							name='fontSizeOption'
-							title='Размер шрифта'
-							options={fontSizeOptions}
-							selected={formState.fontSizeOption}
-							onChange={handleFontSizeChange}
-						/>
-					</div>
-					<div className={styles.field}>
-						<Select
-							title='Цвет шрифта'
-							options={fontColors}
-							selected={formState.fontColor}
-							onChange={handleFontColorChange}
-						/>
-					</div>
+					<Select
+						title='Шрифт'
+						options={fontFamilyOptions}
+						selected={formState.fontFamilyOption}
+						onChange={handleFontFamilyChange}
+					/>
+					<RadioGroup
+						name='fontSizeOption'
+						title='Размер шрифта'
+						options={fontSizeOptions}
+						selected={formState.fontSizeOption}
+						onChange={handleFontSizeChange}
+					/>
+					<Select
+						title='Цвет шрифта'
+						options={fontColors}
+						selected={formState.fontColor}
+						onChange={handleFontColorChange}
+					/>
 					<Separator />
-					<div className={styles.field}>
-						<Select
-							title='Цвет фона'
-							options={backgroundColors}
-							selected={formState.backgroundColor}
-							onChange={handleBgColorChange}
-						/>
-					</div>
-					<div className={styles.field}>
-						<Select
-							title='Ширина контента'
-							options={contentWidthArr}
-							selected={formState.contentWidth}
-							onChange={handleContentWidthChange}
-						/>
-					</div>
+					<Select
+						title='Цвет фона'
+						options={backgroundColors}
+						selected={formState.backgroundColor}
+						onChange={handleBgColorChange}
+					/>
+					<Select
+						title='Ширина контента'
+						options={contentWidthArr}
+						selected={formState.contentWidth}
+						onChange={handleContentWidthChange}
+					/>
 					<div className={styles.bottomContainer}>
 						<Button
 							title='Сбросить'
